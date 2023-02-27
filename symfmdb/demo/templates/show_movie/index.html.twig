@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ShowMovieController!{% endblock %}
+
+{% block body %}
+<div class="details">
+<h1>{{ movie.title }}</h1>
+<img src="{{ moviePoster }}"/>
+<h2>{{ movie.description }}</h2>
+<h2>{{ movie.genre.name }}</h2>
+<h2>{{ movie.releaseDate|date('Y-m-d')}}</h2>
+</div>
+
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CreateMovieController!{% endblock %}
+
+{% block body %}
+{{ form_start(creationForm)}}
+{{ form_widget(creationForm) }}
+<button type="submit">Submit</button>
+{{ form_end(creationForm)}}
+
+
+{% endblock %}
