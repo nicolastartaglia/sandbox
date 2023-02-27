@@ -1,0 +1,107 @@
+version: "1.0"
+
+services:
+
+  # application symfony sur base de données mariadb
+  symfmdb:
+    build:
+      context: ./docker/symfony
+      dockerfile: Dockerfile
+    volumes:
+      - ./symfmdb:/var/www/html
+    environment:
+      DATABASE_URL: "mysql://nicolas:t@mariadb:3306/sandbox?charset=utf8"
+    ports:
+      - 1001:80
+    depends_on:
+      - mariadb
+
+  # application symfony sur base de données postgresql 15
+  symfpsql:
+    build:
+      context: ./docker/symfony
+      dockerfile: Dockerfile
+    volumes:
+      - ./symfpsql:/var/www/html
+    environment:
+      DATABASE_URL: "postgresql://nicolas:t@psql:5432/sandbox?charset=utf8"
+    ports:
+      - 1002:80
+    depends_on:
+      - psql
+  
+  # service mariadb
+  mariadb:
+    build:
+      context: ./docker/mariadb
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - ./data:/data
+      - /mnt/mdb:/var/lib/mysql
+    environment:
+      MARIADB_ROOT_PASSWORD: t
+      MARIADB_USER: nicolas
+      MARIADB_PASSWORD: t
+      MARIADB_DATABASE: sandbox
+    ports:
+      - 3306:3306
+
+  # Service Postgresql
+  psql:
+    build:
+       context: ./docker/psql
+       dockerfile: Dockerfile
+    restart: always
+    volumes:
+        - ./data:/data
+        - /mnt/pg15:/var/lib/postgresql/data
+        - postgresql_import:/tmpfs_tablespace:rw
+    environment:
+      POSTGRES_PASSWORD: t
+      POSTGRES_USER: nicolas
+      POSTGRES_DB: sandbox
+    depends_on:
+      - chown_container
+  
+  # Service phpmyadmin
+  mdbadmin:
+    image: phpmyadmin:latest
+    ports:
+      - 8091:80
+    environment:
+      PMA_HOST: mariadb
+    depends_on:
+      - mariadb
+      
+  # Service d'accès à la base de données postgresql   
+  # le répertoire local ./pgadmin doit avoir le propriétaire 5050:5050 
+  pgad:
+    build:
+       context: ./docker/pgad
+       dockerfile: Dockerfile
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: nicolas.tartaglia@inrae.fr
+      PGADMIN_DEFAULT_PASSWORD: t
+    volumes:
+      - ./pgadmin:/var/lib/pgadmin4/storage/nicolas.tartaglia_inrae.fr
+    ports:
+      - 8092:80
+    depends_on:
+      - psql
+          
+  # Permet de positionner les droits à postgresql sur /tmpfs_tablespace pour la création d'un tablespace
+  chown_container:
+    image: postgres:latest
+    entrypoint: /bin/chown
+    command: "999:999 -R /tmpfs_tablespace"
+    volumes:
+        - ./data:/backup
+        - postgresql_import:/tmpfs_tablespace:rw
+          
+volumes:
+  postgresql_import:
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
