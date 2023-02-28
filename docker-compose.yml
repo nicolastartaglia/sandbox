@@ -90,6 +90,11 @@ services:
       - 8092:80
     depends_on:
       - psql
+
+  plantuml:
+    image: plantuml/plantuml-server:jetty
+    ports:
+      - 8080:8080
           
   # Permet de positionner les droits à postgresql sur /tmpfs_tablespace pour la création d'un tablespace
   chown_container:

@@ -1,0 +1,20 @@
+
+###> symfony/framework-bundle ###
+/symfpsql/demo/.env.local
+/symfpsql/demo/.env.local.php
+/symfpsql/demo/.env.*.local
+/symfpsql/demo/config/secrets/prod/prod.decrypt.private.php
+/symfpsql/demo/public/bundles/
+/symfpsql/demo/var/
+/symfpsql/demo/vendor/
+###< symfony/framework-bundle ###
+
+###> phpunit/phpunit ###
+/symfpsql/demo/phpunit.xml
+/symfpsql/demo/.phpunit.result.cache
+###< phpunit/phpunit ###
+
+###> symfony/phpunit-bridge ###
+/symfpsql/demo/.phpunit.result.cache
+/symfpsql/demo/phpunit.xml
+###< symfony/phpunit-bridge ###
