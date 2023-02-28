@@ -24,7 +24,7 @@ services:
     volumes:
       - ./symfpsql:/var/www/html
     environment:
-      DATABASE_URL: "postgresql://nicolas:t@psql:5432/sandbox?charset=utf8"
+      DATABASE_URL: "postgresql://nicolas:t@psql:5432/demo?charset=utf8"
     ports:
       - 1002:80
     depends_on:
